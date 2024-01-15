@@ -1,7 +1,7 @@
 # Личный проект «Шесть городов»
 
 * Студент: [Артем Ахальцев](https://up.htmlacademy.ru/nodejs-api/6/user/312201).
-* Наставник: `Неизвестно`.
+* Наставник: [Rail Sakhaviev](https://htmlacademy.ru/profile/id1331891).
 
 ---
 
