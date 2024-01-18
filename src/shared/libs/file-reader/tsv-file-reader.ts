@@ -6,7 +6,7 @@ export class TSVFileReader implements FileReader {
   private rawData = "";
 
   constructor(
-    private readonly filename: string
+    private readonly filename: string,
   ) {}
 
   public read(): void {

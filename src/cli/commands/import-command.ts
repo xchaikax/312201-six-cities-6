@@ -4,7 +4,7 @@ import { TSVFileReader } from "../../shared/libs/file-reader/index.js";
 
 export class ImportCommand implements Command {
   constructor(
-    private readonly name: string = CommandType.Import
+    private readonly name: string = CommandType.Import,
   ) {}
 
   getName() {

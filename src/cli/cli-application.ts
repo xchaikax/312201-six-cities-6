@@ -8,7 +8,7 @@ export class CLIApplication {
   private commands: CommandCollection = {};
 
   constructor(
-    private readonly defaultCommand: string = CommandType.Help
+    private readonly defaultCommand: string = CommandType.Help,
   ) {}
 
   public registerCommands(commandList: Command[]): void {

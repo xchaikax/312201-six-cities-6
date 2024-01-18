@@ -4,7 +4,7 @@ import { CommandType } from "../types/command-type.enum.js";
 
 export class HelpCommand implements Command {
   constructor(
-    private readonly name: string = CommandType.Help
+    private readonly name: string = CommandType.Help,
   ) {}
 
   public getName() {
