@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { Command } from "../types/command.interface.js";
 import { CommandType } from "../types/command-type.enum.js";
+import { getErrorMessage } from "../../shared/helpers/index.js";
 
 type PackageJSONConfig = {
   version: string;
@@ -18,17 +19,13 @@ export class VersionCommand implements Command {
     return this.name;
   }
 
-  async execute(..._parameters: string[]) {
+  public async execute(..._parameters: string[]) {
     try {
       const version = this.readVersion();
       console.info(chalk.blue(`v${version}`));
-    } catch (error) {
-      if (!(error instanceof Error)) {
-        throw error;
-      }
-
+    } catch (err) {
       console.error(`Failed to read version from ${this.filePath}`);
-      console.error(error.message);
+      console.error(getErrorMessage(err));
     }
   }
 
