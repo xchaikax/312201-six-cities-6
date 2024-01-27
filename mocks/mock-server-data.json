@@ -1,0 +1,123 @@
+{
+  "api": {
+    "titles": [
+      "Hotel Novotel Suites Paris Nord 18ème",
+      "Dusseldorf Mitte",
+      "Boutique Hotel Notting Hill",
+      "Hotel St. Christopher's Inn Paris - Gare du Nord",
+      "Apartment London Bridge"
+    ],
+    "descriptions": [
+      "Located in the north of Paris, Novotel Suites Paris Nord 18ème is just a 10-minute walk from line 12 of the Paris Metro and the Porte de la Chapelle Metro Station. It offers air-conditioned suites, a fitness centre and free WiFi.",
+      "This hotel is centrally located in the harbour of the city of Düsseldorf, close to lively going-out venues, and offers an extraordinary view of the harbour and modern dockland architecture.",
+      "Boutique Hotel Notting Hill offers elegant rooms with free Wi-Fi, a restaurant and a cosy bar. This hotel boasts a terrace with canal views and is 650 m from the Heineken Experience.",
+      "Located in the centre of Paris, just 200 m from Gare du Nord Train Station, St Christopher’s Inn Paris offers 3 bars, a chill-out room with a football table and an internet café. Montmartre and the Sacré Coeur is a 15-minute walk away while Stade de France Stadium is 6.6 km away.",
+      "Located in London, 1.1 km from Borough Market and 1.1 km from London Bridge, Apartment London Bridge provides accommodation with amenities such as free WiFi and a flat-screen TV. The property is 2.1 km from Tower Bridge and 2.2 km from London Eye."
+    ],
+    "cities": [
+      {
+        "name": "Paris",
+        "coordinates": {
+          "latitude": "48.85661",
+          "longitude": "2.351499"
+        }
+      },
+      {
+        "name": "Cologne",
+        "coordinates": {
+          "latitude": "50.938361",
+          "longitude": "6.959974"
+        }
+      },
+      {
+        "name": "Brussels",
+        "coordinates": {
+          "latitude": "50.846557",
+          "longitude": "4.351697"
+        }
+      },
+      {
+        "name": "Amsterdam",
+        "coordinates": {
+          "latitude": "52.370216",
+          "longitude": "4.895168"
+        }
+      },
+      {
+        "name": "Hamburg",
+        "coordinates": {
+          "latitude": "53.550341",
+          "longitude": "10.000654"
+        }
+      },
+      {
+        "name": "Dusseldorf",
+        "coordinates": {
+          "latitude": "51.225402",
+          "longitude": "6.776314"
+        }
+      }
+    ],
+    "previewImages": [
+      "images/hotel1.jpg",
+      "images/hotel2.jpg",
+      "images/hotel3.jpg",
+      "images/hotel4.jpg",
+      "images/hotel5.jpg",
+      "images/hotel6.jpg"
+    ],
+    "images": [
+      ["images/hotel1.jpg", "images/hotel2.jpg", "images/hotel3.jpg", "images/hotel4.jpg", "images/hotel5.jpg", "images/hotel6.jpg"],
+      ["images/hotel2.jpg", "images/hotel3.jpg", "images/hotel4.jpg", "images/hotel5.jpg", "images/hotel6.jpg", "images/hotel1.jpg"],
+      ["images/hotel3.jpg", "images/hotel4.jpg", "images/hotel5.jpg", "images/hotel6.jpg", "images/hotel1.jpg", "images/hotel2.jpg"],
+      ["images/hotel4.jpg", "images/hotel5.jpg", "images/hotel6.jpg", "images/hotel1.jpg", "images/hotel2.jpg", "images/hotel3.jpg"],
+      ["images/hotel5.jpg", "images/hotel6.jpg", "images/hotel1.jpg", "images/hotel2.jpg", "images/hotel3.jpg", "images/hotel4.jpg"],
+      ["images/hotel6.jpg", "images/hotel1.jpg", "images/hotel2.jpg", "images/hotel3.jpg", "images/hotel4.jpg", "images/hotel5.jpg"]
+    ],
+    "propertyTypes": [
+      "apartment",
+      "house",
+      "room",
+      "hotel"
+    ],
+    "facilities": [
+      "Breakfast",
+      "Air conditioning",
+      "Laptop friendly workspace",
+      "Baby seat",
+      "Washer",
+      "Towels",
+      "Fridge"
+    ],
+    "users": [
+      {
+        "name": "User1",
+        "email": "user1@mail.com",
+        "avatar": "images/avatar1.jpg",
+        "password": "123456",
+        "userType": "pro"
+      },
+      {
+        "name": "User2",
+        "email": "user2@mail.com",
+        "avatar": "images/avatar2.jpg",
+        "password": "1234234",
+        "userType": "обычный"
+      },
+      {
+        "name": "User3",
+        "email": "user3@mail.com",
+        "avatar": "images/avatar3.jpg",
+        "password": "234132",
+        "userType": "pro"
+      },
+      {
+        "name": "User4",
+        "email": "user4@mail.com",
+        "avatar": "images/avatar4.jpg",
+        "password": "352565768",
+        "userType": "обычный"
+      }
+    ]
+  }
+}
