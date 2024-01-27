@@ -32,14 +32,14 @@ export class TSVOfferGenerator implements OfferGenerator {
     const images = getRandomItem(this.mockData.images).join(";");
     const isPremium = Boolean(generateRandomValue(0, 1)).toString();
     const isFavorite = Boolean(generateRandomValue(0, 1)).toString();
-    const rating = generateRandomValue(MIN_RATING, MAX_RATING, 1).toString();
+    const rating = generateRandomValue(MIN_RATING, MAX_RATING, 1);
     const propertyType = getRandomItem(this.mockData.propertyTypes);
-    const roomsNumber = generateRandomValue(MIN_ROOMS, MAX_ROOMS).toString();
-    const guestsNumber = generateRandomValue(MIN_GUESTS, MAX_GUESTS).toString();
-    const price = generateRandomValue(MIN_PRICE, MAX_PRICE).toString();
+    const roomsNumber = generateRandomValue(MIN_ROOMS, MAX_ROOMS);
+    const guestsNumber = generateRandomValue(MIN_GUESTS, MAX_GUESTS);
+    const price = generateRandomValue(MIN_PRICE, MAX_PRICE);
     const facilities = getRandomItems(this.mockData.facilities).join(";");
     const user = Object.values(getRandomItem(this.mockData.users)).join(";");
-    const commentsCount = generateRandomValue(MIN_COMMENTS_COUNT, MAX_COMMENTS_COUNT).toString();
+    const commentsCount = generateRandomValue(MIN_COMMENTS_COUNT, MAX_COMMENTS_COUNT);
     const location = Object.values(cityData.coordinates).join(";");
 
     return [
