@@ -20,7 +20,8 @@
   "dependencies": {
     "chalk": "5.3.0",
     "dayjs": "1.11.10",
-    "got": "13.0.0"
+    "got": "13.0.0",
+    "pino": "8.15.1"
   },
   "devDependencies": {
     "@types/node": "18.19.0",
@@ -29,6 +30,7 @@
     "eslint": "8.49.0",
     "eslint-config-htmlacademy": "9.1.1",
     "json-server": "0.17.3",
+    "pino-pretty": "10.2.0",
     "rimraf": "5.0.1",
     "ts-node": "10.9.1",
     "tslib": "2.6.2",
