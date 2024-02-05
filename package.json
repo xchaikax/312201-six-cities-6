@@ -16,7 +16,10 @@
     "compile": "tsc -p tsconfig.json",
     "clean": "rimraf dist",
     "ts": "node --loader ts-node/esm",
-    "mock:server": "json-server ./mocks/mock-server-data.json --port=3123"
+    "mock:server": "json-server ./mocks/mock-server-data.json --port=3123",
+    "mock:generate": "npm run ts ./src/main.cli.ts -- --generate 10 ./mocks/test-data.tsv http://localhost:3123/api",
+    "mock:import": "npm run ts ./src/main.cli.ts -- --import ./mocks/offers.mock.tsv",
+    "docker:up": "docker compose --file ./docker-compose.dev.yaml --env-file ./.env --project-name six-cities up -d"
   },
   "dependencies": {
     "convict": "6.2.4",
@@ -33,11 +36,13 @@
     "@types/convict": "6.1.4",
     "@types/convict-format-with-validator": "6.0.3",
     "@types/node": "18.19.0",
+    "@typegoose/typegoose": "11.5.0",
     "@typescript-eslint/eslint-plugin": "6.7.0",
     "@typescript-eslint/parser": "6.7.0",
     "eslint": "8.49.0",
     "eslint-config-htmlacademy": "9.1.1",
     "json-server": "0.17.3",
+    "mongoose": "7.5.3",
     "pino-pretty": "10.2.0",
     "rimraf": "5.0.1",
     "ts-node": "10.9.1",
