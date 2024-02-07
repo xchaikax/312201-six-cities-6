@@ -22,9 +22,9 @@ export function createOffer(data: string): Offer {
   ] = data.replace("\n", "").split("\t");
 
   return {
-    createdDate: new Date(createdDate),
     title,
     description,
+    createdDate: new Date(createdDate),
     city: City[city as keyof typeof City],
     previewImage,
     images: images.split(";"),
