@@ -12,17 +12,17 @@ export interface UserEntity extends defaultClasses.Base {}
   },
 })
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export class UserEntity extends defaultClasses.TimeStamps implements User {
-  @prop({ required: true, default: "", minlength: 1, maxlength: 15 })
+export class UserEntity extends defaultClasses.TimeStamps {
+  @prop({ required: true, minlength: 1, maxlength: 15, trim: true })
   public name!: string;
 
-  @prop({ unique: true, required: true, match: /^\S+@\S+\.\S+$/ })
+  @prop({ unique: true, required: true, match: /^\S+@\S+\.\S+$/, trim: true })
   public email!: string;
 
   @prop({ required: false, match: /\.(.jpg|.jpeg|.png)$/ })
   public avatar?: string;
 
-  @prop({ required: true, default: UserType.Regular, match: /обычный|pro/ })
+  @prop({ required: true, enum: UserType })
   public userType!: UserType;
 
   @prop({ required: true, minlength: 6, maxlength: 12 })
