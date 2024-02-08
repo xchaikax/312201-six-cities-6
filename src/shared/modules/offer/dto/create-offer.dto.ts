@@ -1,5 +1,5 @@
-import { City, Facility, PropertyType, User } from "../../../../types/index.js";
-import { Coordinates } from "../../../../types/coordinates.type.js";
+import { City, Facility, PropertyType, User } from "../../../types/index.js";
+import { Coordinates } from "../../../types/coordinates.type.js";
 
 export class CreateOfferDto {
   public title: string;

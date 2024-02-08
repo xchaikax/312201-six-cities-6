@@ -1,7 +1,7 @@
 import { types } from "@typegoose/typegoose";
 import { injectable, inject } from "inversify";
-import { Component } from "../../../types/index.js";
-import { Logger } from "../../logger/index.js";
+import { Component } from "../../types/index.js";
+import { Logger } from "../../libs/logger/index.js";
 import { OfferService } from "./offer-service.interface.js";
 import { CreateOfferDto } from "./dto/create-offer.dto.js";
 import { OfferEntity } from "./offer.entity.js";
@@ -22,6 +22,6 @@ export class BaseOfferService implements OfferService {
   }
 
   public async findById(id: string): Promise<types.DocumentType<OfferEntity> | null> {
-    return this.offerModel.findById(id);
+    return await this.offerModel.findById(id);
   }
 }

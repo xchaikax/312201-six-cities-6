@@ -1,7 +1,7 @@
 import { types } from "@typegoose/typegoose";
 import { injectable, inject } from "inversify";
-import { Component } from "../../../types/index.js";
-import { Logger } from "../../logger/index.js";
+import { Component } from "../../types/index.js";
+import { Logger } from "../../libs/logger/index.js";
 import { UserService } from "./user-service.interface.js";
 import { CreateUserDto } from "./dto/create-user.dto.js";
 import { UserEntity } from "./user.entity.js";
@@ -25,11 +25,11 @@ export class BaseUserService implements UserService {
   }
 
   public async findById(userId: string): Promise<types.DocumentType<UserEntity> | null> {
-    return this.userModel.findById(userId);
+    return await this.userModel.findById(userId);
   }
 
   public async findByEmail(email: string): Promise<types.DocumentType<UserEntity> | null> {
-    return this.userModel.findOne({ email });
+    return await this.userModel.findOne({ email });
   }
 
   public async findOrCreate(dto: CreateUserDto, salt: string): Promise<types.DocumentType<UserEntity>> {
