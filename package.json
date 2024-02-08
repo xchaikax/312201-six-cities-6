@@ -18,7 +18,7 @@
     "ts": "node --loader ts-node/esm",
     "mock:server": "json-server ./mocks/mock-server-data.json --port=3123",
     "mock:generate": "npm run ts ./src/main.cli.ts -- --generate 10 ./mocks/test-data.tsv http://localhost:3123/api",
-    "mock:import": "npm run ts ./src/main.cli.ts -- --import ./mocks/offers.mock.tsv",
+    "mock:import": "npm run ts ./src/main.cli.ts -- --import ./mocks/test-data.tsv",
     "docker:up": "docker compose --file ./docker-compose.dev.yaml --env-file ./.env --project-name six-cities up -d"
   },
   "dependencies": {

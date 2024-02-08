@@ -94,28 +94,24 @@
         "name": "User1",
         "email": "user1@mail.com",
         "avatar": "images/avatar1.jpg",
-        "password": "123456",
         "userType": "pro"
       },
       {
         "name": "User2",
         "email": "user2@mail.com",
         "avatar": "images/avatar2.jpg",
-        "password": "1234234",
         "userType": "обычный"
       },
       {
         "name": "User3",
         "email": "user3@mail.com",
         "avatar": "images/avatar3.jpg",
-        "password": "234132",
         "userType": "pro"
       },
       {
         "name": "User4",
         "email": "user4@mail.com",
         "avatar": "images/avatar4.jpg",
-        "password": "352565768",
         "userType": "обычный"
       }
     ]

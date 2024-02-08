@@ -19,13 +19,13 @@ export class UserEntity extends defaultClasses.TimeStamps {
   @prop({ unique: true, required: true, match: /^\S+@\S+\.\S+$/, trim: true })
   public email!: string;
 
-  @prop({ required: false, match: /\.(.jpg|.jpeg|.png)$/ })
+  @prop({ required: false, match: /\.(jpg|jpeg|png)$/ })
   public avatar?: string;
 
   @prop({ required: true, enum: UserType })
   public userType!: UserType;
 
-  @prop({ required: true, minlength: 6, maxlength: 12 })
+  @prop({ required: true })
   private password?: string;
 
   constructor(userData: User) {

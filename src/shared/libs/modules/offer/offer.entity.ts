@@ -53,7 +53,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({ required: true, min: 100, max: 100000 })
   public price!: number;
 
-  @prop({ required: true, type: () => [Facility], enum: Facility }, PropType.ARRAY)
+  @prop({ required: true, type: () => [String], enum: Facility, default: [] }, PropType.ARRAY)
   public facilities!: Facility[];
 
   @prop({ required: true, ref: UserEntity })

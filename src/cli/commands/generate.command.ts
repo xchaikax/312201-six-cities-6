@@ -17,8 +17,7 @@ export class GenerateCommand implements Command {
     return this.name;
   }
 
-  public async execute(...parameters: string[]): Promise<void> {
-    const [count, filepath, url] = parameters;
+  public async execute(count: string, filepath: string, url: string): Promise<void> {
     const offerCount = Number.parseInt(count, 10);
 
     try {
