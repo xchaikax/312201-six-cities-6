@@ -5,9 +5,9 @@ import { User } from "./user.type.js";
 import { Coordinates } from "./coordinates.type.js";
 
 export type Offer = {
-  createdDate: Date;
   title: string;
   description: string;
+  createdDate: Date;
   city: City;
   previewImage: string;
   images: string[];

@@ -8,6 +8,11 @@ export function getRandomItems<T>(items: T[]): T[] {
   return items.slice(startPosition, endPosition);
 }
 
+export function generateRandomString(length: number) {
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  return Array.from({ length }, () => characters.charAt(generateRandomValue(0, characters.length - 1))).join("");
+}
+
 export function getRandomItem<T>(items: T[]): T {
   return items[generateRandomValue(0, items.length - 1)];
 }

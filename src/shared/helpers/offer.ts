@@ -22,9 +22,9 @@ export function createOffer(data: string): Offer {
   ] = data.replace("\n", "").split("\t");
 
   return {
-    createdDate: new Date(createdDate),
     title,
     description,
+    createdDate: new Date(createdDate),
     city: City[city as keyof typeof City],
     previewImage,
     images: images.split(";"),
@@ -35,7 +35,7 @@ export function createOffer(data: string): Offer {
     roomsNumber: Number.parseInt(roomsNumber, 10),
     guestsNumber: Number.parseInt(guestsNumber, 10),
     price: Number.parseInt(price, 10),
-    facilities: facilities.split(";").map((facility) => facility as Facility),
+    facilities: facilities.split(";").filter(Boolean).map((facility) => facility as Facility),
     user: parseUser(user),
     commentsCount: Number.parseInt(commentsCount, 10),
     coordinates: parseCoordinates(coordinates),
@@ -43,8 +43,8 @@ export function createOffer(data: string): Offer {
 }
 
 function parseUser(user: string): User {
-  const [name, email, avatar, password, userType] = user.split(";");
-  return { name, email, avatar, password, userType: userType as UserType };
+  const [name, email, avatar, userType] = user.split(";");
+  return { name, email, avatar, userType: userType as UserType };
 }
 
 function parseCoordinates(location: string): { latitude: number, longitude: number } {
