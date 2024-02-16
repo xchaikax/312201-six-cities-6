@@ -79,7 +79,7 @@ export class ImportCommand implements Command {
 
   private saveOffer = async (offer: Offer) => {
     const user = await this.userService.findOrCreate({
-      ...offer.user,
+      ...offer.author,
       password: generateRandomString(generateRandomValue(6, 12)),
     }, this.salt);
 
