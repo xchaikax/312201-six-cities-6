@@ -12,6 +12,7 @@ import { ConsoleLogger } from "../../shared/libs/logger/console.logger.js";
 import { RestConfig } from "../../shared/libs/config/index.js";
 import { BaseUserService, UserModel, UserService } from "../../shared/modules/user/index.js";
 import { BaseOfferService, OfferModel, OfferService } from "../../shared/modules/offer/index.js";
+import { BaseCommentService, CommentModel } from "../../shared/modules/comment/index.js";
 import { DatabaseClient, MongoDatabaseClient } from "../../shared/libs/database-client/index.js";
 import { Logger } from "../../shared/libs/logger/index.js";
 import { Offer } from "../../shared/types/index.js";
@@ -21,6 +22,7 @@ export class ImportCommand implements Command {
   private readonly logger: Logger;
   private readonly userService: UserService;
   private readonly offerService: OfferService;
+  private readonly commentService: BaseCommentService;
   private readonly databaseClient: DatabaseClient;
   private salt: string;
 
@@ -31,6 +33,7 @@ export class ImportCommand implements Command {
     this.config = new RestConfig(this.logger);
     this.userService = new BaseUserService(this.logger, UserModel);
     this.offerService = new BaseOfferService(this.logger, OfferModel);
+    this.commentService = new BaseCommentService(this.logger, CommentModel);
     this.databaseClient = new MongoDatabaseClient(this.logger);
   }
 
@@ -77,15 +80,28 @@ export class ImportCommand implements Command {
     await this.databaseClient.disconnect();
   };
 
-  private saveOffer = async (offer: Offer) => {
-    const user = await this.userService.findOrCreate({
+  private saveOffer = async (offer: Omit<Offer, "isFavorite" | "rating" | "commentsCount">) => {
+    const createdUser = await this.userService.findOrCreate({
       ...offer.author,
       password: generateRandomString(generateRandomValue(6, 12)),
     }, this.salt);
 
-    await this.offerService.create({
+    const createdOffer = await this.offerService.create({
       ...offer,
-      user: user.id,
+      authorId: createdUser.id,
     });
+
+    const comments = Array.from({ length: generateRandomValue(0, 5) }, () => ({
+      text: generateRandomString(generateRandomValue(20, 140)),
+      rating: generateRandomValue(1, 5),
+      authorId: createdUser.id,
+      offerId: createdOffer.id,
+    }));
+
+    await Promise.all(comments.map(async (comment) => {
+      await this.commentService.create(comment);
+      const newRating = await this.commentService.getAverageRating(createdOffer.id);
+      await this.offerService.updateByIdOnNewComment(createdOffer.id, newRating);
+    }));
   };
 }
