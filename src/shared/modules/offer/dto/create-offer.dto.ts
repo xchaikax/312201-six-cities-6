@@ -1,4 +1,4 @@
-import { City, Facility, PropertyType, User } from "../../../types/index.js";
+import { City, Facility, PropertyType } from "../../../types/index.js";
 import { Coordinates } from "../../../types/coordinates.type.js";
 
 export class CreateOfferDto {
@@ -9,14 +9,11 @@ export class CreateOfferDto {
   public previewImage: string;
   public images: string[];
   public isPremium: boolean;
-  public isFavorite: boolean;
-  public rating: number;
   public propertyType: PropertyType;
   public roomsNumber: number;
   public guestsNumber: number;
   public price: number;
   public facilities: Facility[];
-  public user: User;
-  public commentsCount: number;
+  public authorId: string;
   public coordinates: Coordinates;
 }

@@ -1,0 +1,3 @@
+export const OFFERS_AMOUNT_LIMIT = 60;
+
+export const PREMIUM_OFFERS_AMOUNT_LIMIT = 3;

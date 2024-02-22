@@ -35,10 +35,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({ required: true })
   public isPremium!: boolean;
 
-  @prop({ required: true })
-  public isFavorite!: boolean;
-
-  @prop({ required: true, min: 1, max: 5 })
+  @prop({ required: false, min: 1, max: 5, default: null })
   public rating!: number;
 
   @prop({ required: true, enum: PropertyType })
@@ -57,7 +54,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   public facilities!: Facility[];
 
   @prop({ required: true, ref: UserEntity })
-  public author!: Ref<UserEntity>;
+  public authorId!: Ref<UserEntity>;
 
   @prop({ required: false, default: 0 })
   public commentsCount?: number;
