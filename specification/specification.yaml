@@ -71,6 +71,27 @@ paths:
         "401":
           description: Неверные данные для авторизации
 
+  /users/logout:
+    post:
+      tags:
+        - users
+      summary: Завершение сессии пользователя
+
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+            example: eufneh34fh93hf9hdjfdu3hf93hedf.3f9374gf7w.fu394gf87er
+
+      responses:
+        "204":
+          description: Сессия завершена
+        "401":
+          description: Данный пользователь не авторизован
+
+  /users/status:
     get:
       tags:
         - users
@@ -95,26 +116,6 @@ paths:
                 $ref: "#/components/schemas/user"
         "401":
           description: Пользователь не авторизован. Токен не валидный
-
-  /users/logout:
-    post:
-      tags:
-        - users
-      summary: Завершение сессии пользователя
-
-      parameters:
-        - name: Authorization
-          in: header
-          required: true
-          schema:
-            type: string
-            example: eufneh34fh93hf9hdjfdu3hf93hedf.3f9374gf7w.fu394gf87er
-
-      responses:
-        "204":
-          description: Сессия завершена
-        "401":
-          description: Данный пользователь не авторизован
 
   /offers:
     post:
