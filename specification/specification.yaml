@@ -689,11 +689,11 @@ components:
         offerId:
           type: string
           example: 132
-        userId:
+        authorId:
           type: string
           example: 132
       required:
         - text
         - rating
         - offerId
-        - userId
+        - authorId
