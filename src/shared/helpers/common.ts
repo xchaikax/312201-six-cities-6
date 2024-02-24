@@ -29,6 +29,6 @@ export function createErrorObject(message: string) {
   };
 }
 
-export function fillDTO<T, V>(dto: ClassConstructor<T>, plainObject: V) {
+export function fillDTO<T, V>(dto: ClassConstructor<T | T[]>, plainObject: V) {
   return plainToInstance(dto, plainObject, { excludeExtraneousValues: true });
 }

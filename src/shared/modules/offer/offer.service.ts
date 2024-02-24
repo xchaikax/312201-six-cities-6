@@ -27,6 +27,10 @@ export class BaseOfferService implements OfferService {
     return await this.offerModel.findById(id).populate("authorId").exec();
   }
 
+  public async exists(id: string): Promise<boolean> {
+    return !!(await this.offerModel.exists({ _id: id }));
+  }
+
   updateById(id: string, dto: UpdateOfferDto): Promise<types.DocumentType<OfferEntity> | null> {
     const updatedOffer = this.offerModel
       .findByIdAndUpdate(id, dto, { new: true })

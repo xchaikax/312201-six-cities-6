@@ -1,7 +1,11 @@
-import { Expose } from "class-transformer";
+import { Expose, Type } from "class-transformer";
 import { UserType } from "../../../types/index.js";
 
 export class UserRdo {
+  @Expose({ name: "_id" })
+  @Type(() => String)
+  public id: string;
+
   @Expose()
   public name: string;
 

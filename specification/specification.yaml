@@ -375,47 +375,13 @@ paths:
           description: Предложение не найдено
 
 
-  /offers/{offerId}/comments:
-    get:
-      tags:
-        - comments
-      summary: Получение списка комментариев для предложения
-
-      parameters:
-        - name: offerId
-          in: path
-          description: Идентификатор предложения
-          required: true
-          schema:
-            type: string
-            example: 132
-
-      responses:
-        "200":
-          description: Список комментариев
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/comment"
-        "404":
-          description: Предложение не найдено
-
-
+  /comments:
     post:
       tags:
         - comments
       summary: Добавление комментария для предложения
 
       parameters:
-        - name: offerId
-          in: path
-          description: Идентификатор предложения
-          required: true
-          schema:
-            type: string
-            example: 132
         - name: Authorization
           in: header
           required: true
@@ -442,6 +408,33 @@ paths:
           description: Ошибка валидации данных
         "401":
           description: Пользователь не авторизован
+        "404":
+          description: Предложение не найдено
+
+  /comments/{offerId}:
+    get:
+      tags:
+        - comments
+      summary: Получение списка комментариев для предложения
+
+      parameters:
+        - name: offerId
+          in: path
+          description: Идентификатор предложения
+          required: true
+          schema:
+            type: string
+            example: 132
+
+      responses:
+        "200":
+          description: Список комментариев
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/comment"
         "404":
           description: Предложение не найдено
 
@@ -693,6 +686,14 @@ components:
           minimum: 1
           maximum: 5
           example: 3.5
+        offerId:
+          type: string
+          example: 132
+        userId:
+          type: string
+          example: 132
       required:
         - text
         - rating
+        - offerId
+        - userId

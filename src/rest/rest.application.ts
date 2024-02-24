@@ -17,6 +17,7 @@ export class RestApplication {
     @inject(Component.DatabaseClient) private readonly databaseClient: DatabaseClient,
     @inject(Component.ExceptionFilter) private readonly exceptionFilter: ExceptionFilter,
     @inject(Component.UserController) private readonly userController: Controller,
+    @inject(Component.CommentController) private readonly commentController: Controller,
   ) {
     this.server = express();
   }
@@ -55,6 +56,7 @@ export class RestApplication {
 
   private async initControllers() {
     this.server.use("/users", this.userController.router);
+    this.server.use("/comments", this.commentController.router);
   }
 
   private async initMiddleware() {
