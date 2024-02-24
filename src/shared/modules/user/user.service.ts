@@ -41,4 +41,8 @@ export class BaseUserService implements UserService {
 
     return this.create(dto, salt);
   }
+
+  public async exists(id: string): Promise<boolean> {
+    return !!(await this.userModel.exists({ _id: id }));
+  }
 }

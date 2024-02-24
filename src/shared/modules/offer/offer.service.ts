@@ -6,7 +6,7 @@ import { OfferService } from "./offer-service.interface.js";
 import { CreateOfferDto } from "./dto/create-offer.dto.js";
 import { OfferEntity } from "./offer.entity.js";
 import { UpdateOfferDto } from "./dto/update-offer.dto.js";
-import { OFFERS_AMOUNT_LIMIT, PREMIUM_OFFERS_AMOUNT_LIMIT } from "./offer.constants.js";
+import { PREMIUM_OFFERS_AMOUNT_LIMIT } from "./offer.constants.js";
 
 @injectable()
 export class BaseOfferService implements OfferService {
@@ -31,8 +31,8 @@ export class BaseOfferService implements OfferService {
     return !!(await this.offerModel.exists({ _id: id }));
   }
 
-  updateById(id: string, dto: UpdateOfferDto): Promise<types.DocumentType<OfferEntity> | null> {
-    const updatedOffer = this.offerModel
+  public async updateById(id: string, dto: UpdateOfferDto): Promise<types.DocumentType<OfferEntity> | null> {
+    const updatedOffer = await this.offerModel
       .findByIdAndUpdate(id, dto, { new: true })
       .populate("authorId")
       .exec();
@@ -50,12 +50,10 @@ export class BaseOfferService implements OfferService {
     return deletedOffer?.id;
   }
 
-  public async findAll(amount?: number): Promise<types.DocumentType<OfferEntity>[]> {
-    const limit = amount || OFFERS_AMOUNT_LIMIT;
-
+  public async findAll(amount: number): Promise<types.DocumentType<OfferEntity>[]> {
     return await this.offerModel
       .aggregate([
-        { $limit: limit },
+        { $limit: amount },
         { $lookup: { from: "users", localField: "authorId", foreignField: "_id", as: "author" } },
         { $unwind: "$author" },
       ]);

@@ -274,7 +274,7 @@ paths:
         "404":
           description: Предложение не найдено
 
-  /offers/premium:
+  /offers/premium/${city}:
     get:
       tags:
         - offers
@@ -282,7 +282,7 @@ paths:
 
       parameters:
         - name: city
-          in: query
+          in: path
           description: Название города
           required: true
           schema:

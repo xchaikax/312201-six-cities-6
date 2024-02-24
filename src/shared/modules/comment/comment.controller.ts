@@ -9,7 +9,7 @@ import { OfferService } from "../offer/index.js";
 import { CommentService } from "./comment-service.interface.js";
 import { CommentRdo } from "./rdo/comment.rdo.js";
 import { CreateCommentRequest } from "./types/create-comment-request.type.js";
-import { GetCommentsRequest } from "./types/get-comments-request.js";
+import { FindCommentsRequest } from "./types/find-comments-request.js";
 
 @injectable()
 export class CommentController extends BaseController {
@@ -38,13 +38,23 @@ export class CommentController extends BaseController {
     }
 
     const result = await this.commentService.create(body);
-    console.log(result);
-    const r = fillDTO(CommentRdo, result);
-    this.created(res, r);
+
+    const newRating = await this.commentService.getUpdatedAverageRating(body.offerId);
+    const updatedOffer = await this.offerService.updateByIdOnNewComment(body.offerId, newRating);
+
+    if (!updatedOffer) {
+      throw new HttpError(
+        StatusCodes.INTERNAL_SERVER_ERROR,
+        `Offer with id ${body.offerId} was not updated.`,
+        "CommentController",
+      );
+    }
+
+    this.created(res, fillDTO(CommentRdo, result));
   }
 
   public async findByOfferId(
-    { params: { offerId } }: GetCommentsRequest,
+    { params: { offerId } }: FindCommentsRequest,
     res: Response,
   ) {
     if (!(await this.offerService.exists(offerId))) {

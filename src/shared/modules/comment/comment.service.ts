@@ -45,7 +45,7 @@ export class BaseCommentService implements CommentService {
     return result;
   }
 
-  public async getAverageRating(offerId: string): Promise<number> {
+  public async getUpdatedAverageRating(offerId: string): Promise<number> {
     const [{ rating }] = await this.commentModel.aggregate([
       { $match: { offerId: new mongoose.Types.ObjectId(offerId) } },
       {
