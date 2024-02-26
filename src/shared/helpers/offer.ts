@@ -45,3 +45,7 @@ function parseCoordinates(location: string): { latitude: number, longitude: numb
   const [latitude, longitude] = location.split(";");
   return { latitude: Number.parseFloat(latitude), longitude: Number.parseFloat(longitude) };
 }
+
+export function isCity(city: string): city is City {
+  return Object.values(City).includes(city as City);
+}

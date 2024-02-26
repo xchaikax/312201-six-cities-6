@@ -20,22 +20,32 @@ export class BaseCommentService implements CommentService {
 
     this.logger.info(`Comment with id ${comment.id} was created`);
 
-    return comment.populate("authorId");
+    const commentWithAuthor = await this.commentModel.aggregate([
+      { $match: { _id: comment._id } },
+      { $lookup: { from: "users", localField: "authorId", foreignField: "_id", as: "author" } },
+      { $unwind: "$author" },
+      { $limit: 1 },
+    ]).exec();
+
+    return commentWithAuthor[0];
   }
 
   public async findByOfferId(offerId: string): Promise<types.DocumentType<CommentEntity>[]> {
     const result = await this.commentModel
-      .find({ offerId })
+      .aggregate<types.DocumentType<CommentEntity>>([
+        { $match: { offerId: new mongoose.Types.ObjectId(offerId) } },
+        { $lookup: { from: "users", localField: "authorId", foreignField: "_id", as: "author" } },
+        { $unwind: "$author" },
+      ])
       .limit(COMMENTS_AMOUNT_LIMIT)
       .sort({ createdAt: Sorting.Descending })
-      .populate(["authorId", "offerId"])
       .exec();
 
     this.logger.info(`Number of comments for offer ${offerId}: ${result.length}`);
     return result;
   }
 
-  public async getAverageRating(offerId: string): Promise<number> {
+  public async getUpdatedAverageRating(offerId: string): Promise<number> {
     const [{ rating }] = await this.commentModel.aggregate([
       { $match: { offerId: new mongoose.Types.ObjectId(offerId) } },
       {

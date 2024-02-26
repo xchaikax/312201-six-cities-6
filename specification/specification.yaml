@@ -71,6 +71,27 @@ paths:
         "401":
           description: Неверные данные для авторизации
 
+  /users/logout:
+    post:
+      tags:
+        - users
+      summary: Завершение сессии пользователя
+
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+            example: eufneh34fh93hf9hdjfdu3hf93hedf.3f9374gf7w.fu394gf87er
+
+      responses:
+        "204":
+          description: Сессия завершена
+        "401":
+          description: Данный пользователь не авторизован
+
+  /users/status:
     get:
       tags:
         - users
@@ -95,26 +116,6 @@ paths:
                 $ref: "#/components/schemas/user"
         "401":
           description: Пользователь не авторизован. Токен не валидный
-
-  /users/logout:
-    post:
-      tags:
-        - users
-      summary: Завершение сессии пользователя
-
-      parameters:
-        - name: Authorization
-          in: header
-          required: true
-          schema:
-            type: string
-            example: eufneh34fh93hf9hdjfdu3hf93hedf.3f9374gf7w.fu394gf87er
-
-      responses:
-        "204":
-          description: Сессия завершена
-        "401":
-          description: Данный пользователь не авторизован
 
   /offers:
     post:
@@ -273,7 +274,7 @@ paths:
         "404":
           description: Предложение не найдено
 
-  /offers/premium:
+  /offers/premium/${city}:
     get:
       tags:
         - offers
@@ -281,7 +282,7 @@ paths:
 
       parameters:
         - name: city
-          in: query
+          in: path
           description: Название города
           required: true
           schema:
@@ -374,47 +375,13 @@ paths:
           description: Предложение не найдено
 
 
-  /offers/{offerId}/comments:
-    get:
-      tags:
-        - comments
-      summary: Получение списка комментариев для предложения
-
-      parameters:
-        - name: offerId
-          in: path
-          description: Идентификатор предложения
-          required: true
-          schema:
-            type: string
-            example: 132
-
-      responses:
-        "200":
-          description: Список комментариев
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/comment"
-        "404":
-          description: Предложение не найдено
-
-
+  /comments:
     post:
       tags:
         - comments
       summary: Добавление комментария для предложения
 
       parameters:
-        - name: offerId
-          in: path
-          description: Идентификатор предложения
-          required: true
-          schema:
-            type: string
-            example: 132
         - name: Authorization
           in: header
           required: true
@@ -441,6 +408,33 @@ paths:
           description: Ошибка валидации данных
         "401":
           description: Пользователь не авторизован
+        "404":
+          description: Предложение не найдено
+
+  /comments/{offerId}:
+    get:
+      tags:
+        - comments
+      summary: Получение списка комментариев для предложения
+
+      parameters:
+        - name: offerId
+          in: path
+          description: Идентификатор предложения
+          required: true
+          schema:
+            type: string
+            example: 132
+
+      responses:
+        "200":
+          description: Список комментариев
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/comment"
         "404":
           description: Предложение не найдено
 
@@ -692,6 +686,14 @@ components:
           minimum: 1
           maximum: 5
           example: 3.5
+        offerId:
+          type: string
+          example: 132
+        authorId:
+          type: string
+          example: 132
       required:
         - text
         - rating
+        - offerId
+        - authorId
