@@ -51,7 +51,8 @@ export class OfferController extends BaseController {
       handler: this.findPremiumOffersByCity,
       middlewares: [
         new ValidateCityMiddleware(),
-      ] });
+      ],
+    });
     this.addRoute({
       path: "/:offerId",
       method: HttpMethod.Get,
@@ -59,7 +60,8 @@ export class OfferController extends BaseController {
       middlewares: [
         new ValidateObjectIdMiddleware("offerId"),
         new DocumentExistsMiddleware(this.offerService, "Offer", "offerId"),
-      ] });
+      ],
+    });
     this.addRoute({
       path: "/:offerId",
       method:
