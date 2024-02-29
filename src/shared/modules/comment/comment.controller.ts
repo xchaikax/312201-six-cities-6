@@ -35,8 +35,8 @@ export class CommentController extends BaseController {
       handler: this.create,
       middlewares: [
         new ValidateObjectIdMiddleware("offerId"),
-        new DocumentExistsMiddleware(this.offerService, "Offer", "offerId"),
         new ValidateDtoMiddleware(CreateCommentDto),
+        new DocumentExistsMiddleware(this.offerService, "Offer", "offerId"),
       ],
     });
     this.addRoute({
