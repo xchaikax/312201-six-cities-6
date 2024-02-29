@@ -375,7 +375,7 @@ paths:
           description: Предложение не найдено
 
 
-  /comments:
+  /comments/{offerId}:
     post:
       tags:
         - comments
@@ -388,6 +388,14 @@ paths:
           schema:
             type: string
             example: eufneh34fh93hf9hdjfdu3hf93hedf.3f9374gf7w.fu394gf87er
+
+        - name: offerId
+          in: path
+          description: Идентификатор предложения
+          required: true
+          schema:
+            type: string
+            example: 132
 
       requestBody:
         description: Информация для создания комментария
@@ -411,7 +419,6 @@ paths:
         "404":
           description: Предложение не найдено
 
-  /comments/{offerId}:
     get:
       tags:
         - comments
@@ -686,14 +693,10 @@ components:
           minimum: 1
           maximum: 5
           example: 3.5
-        offerId:
-          type: string
-          example: 132
         authorId:
           type: string
           example: 132
       required:
         - text
         - rating
-        - offerId
         - authorId
