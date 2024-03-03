@@ -32,3 +32,7 @@ export function createErrorObject(message: string) {
 export function fillDTO<T, V>(dto: ClassConstructor<T | T[]>, plainObject: V) {
   return plainToInstance(dto, plainObject, { excludeExtraneousValues: true });
 }
+
+export function capitalize(value: string) {
+  return `${value[0].toUpperCase()}${value.slice(1)}`;
+}

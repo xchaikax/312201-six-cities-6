@@ -1,15 +1,23 @@
 import { Response } from "express";
 import { inject, injectable } from "inversify";
 import { StatusCodes } from "http-status-codes";
-import { BaseController, HttpError, HttpMethod } from "../../libs/rest/index.js";
+import {
+  BaseController,
+  HttpError,
+  HttpMethod,
+  ValidateDtoMiddleware,
+  ValidateObjectIdMiddleware,
+} from "../../libs/rest/index.js";
 import { Component } from "../../types/index.js";
 import { Logger } from "../../libs/logger/index.js";
 import { fillDTO } from "../../helpers/index.js";
+import { DocumentExistsMiddleware } from "../../libs/rest/index.js";
 import { OfferService } from "../offer/index.js";
 import { CommentService } from "./comment-service.interface.js";
 import { CommentRdo } from "./rdo/comment.rdo.js";
 import { CreateCommentRequest } from "./types/create-comment-request.type.js";
 import { FindCommentsRequest } from "./types/find-comments-request.js";
+import { CreateCommentDto } from "./dto/create-comment.dto.js";
 
 @injectable()
 export class CommentController extends BaseController {
@@ -21,31 +29,43 @@ export class CommentController extends BaseController {
     super(logger);
     this.logger.info("Register routes for CommentsController…");
 
-    this.addRoute({ path: "/", method: HttpMethod.Post, handler: this.create });
-    this.addRoute({ path: "/:offerId", method: HttpMethod.Get, handler: this.findByOfferId });
+    this.addRoute({
+      path: "/:offerId",
+      method: HttpMethod.Post,
+      handler: this.create,
+      middlewares: [
+        new ValidateObjectIdMiddleware("offerId"),
+        new ValidateDtoMiddleware(CreateCommentDto),
+        new DocumentExistsMiddleware(this.offerService, "Offer", "offerId"),
+      ],
+    });
+    this.addRoute({
+      path: "/:offerId",
+      method: HttpMethod.Get,
+      handler: this.findByOfferId,
+      middlewares: [
+        new ValidateObjectIdMiddleware("offerId"),
+        new DocumentExistsMiddleware(this.offerService, "Offer", "offerId"),
+      ],
+    });
   }
 
   public async create(
-    { body }: CreateCommentRequest,
+    { body, params: { offerId } }: CreateCommentRequest,
     res: Response,
   ) {
-    if (!(await this.offerService.exists(body.offerId))) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id ${body.offerId} not found.`,
-        "CommentController",
-      );
-    }
+    const result = await this.commentService.create({
+      ...body,
+      offerId,
+    });
 
-    const result = await this.commentService.create(body);
-
-    const newRating = await this.commentService.getUpdatedAverageRating(body.offerId);
-    const updatedOffer = await this.offerService.updateByIdOnNewComment(body.offerId, newRating);
+    const newRating = await this.commentService.getUpdatedAverageRating(offerId);
+    const updatedOffer = await this.offerService.updateByIdOnNewComment(offerId, newRating);
 
     if (!updatedOffer) {
       throw new HttpError(
         StatusCodes.INTERNAL_SERVER_ERROR,
-        `Offer with id ${body.offerId} was not updated.`,
+        `Offer with id ${offerId} was not updated.`,
         "CommentController",
       );
     }
@@ -57,16 +77,8 @@ export class CommentController extends BaseController {
     { params: { offerId } }: FindCommentsRequest,
     res: Response,
   ) {
-    if (!(await this.offerService.exists(offerId))) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id ${offerId} not found.`,
-        "CommentController",
-      );
-    }
-
     const comments = await this.commentService.findByOfferId(offerId);
-    console.log(comments);
+
     this.ok(res, fillDTO(CommentRdo, comments));
   }
 }

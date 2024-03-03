@@ -8,3 +8,5 @@ export { Offer } from "./offer.type.js";
 export { MockServerData } from "./mock-server-data.type.js";
 export { Component } from "./component.enum.js";
 export { Sorting } from "./sorting.enum.js";
+export { DocumentExists } from "./document-exists.interface.js";
+export { Coordinates } from "./coordinates.type.js";

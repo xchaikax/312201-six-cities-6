@@ -1,10 +1,17 @@
 import { Response } from "express";
 import { inject, injectable } from "inversify";
 import { StatusCodes } from "http-status-codes";
-import { BaseController, HttpError, HttpMethod } from "../../libs/rest/index.js";
-import { Component } from "../../types/index.js";
+import {
+  BaseController,
+  HttpError,
+  HttpMethod,
+  ValidateCityMiddleware, ValidateDtoMiddleware,
+  ValidateObjectIdMiddleware,
+} from "../../libs/rest/index.js";
+import { City, Component } from "../../types/index.js";
 import { Logger } from "../../libs/logger/index.js";
-import { fillDTO, isCity } from "../../helpers/index.js";
+import { fillDTO } from "../../helpers/index.js";
+import { DocumentExistsMiddleware } from "../../libs/rest/index.js";
 import { UserService } from "../user/index.js";
 import { OfferService } from "./offer-service.interface.js";
 import { OFFERS_AMOUNT_LIMIT } from "./offer.constants.js";
@@ -16,6 +23,8 @@ import { FindAllOffersRequestType } from "./types/find-all-offers-request.type.j
 import { FindPremiumByCityRequest } from "./types/find-premium-by-city-request.type.js";
 import { UpdateOfferRequest } from "./types/update-offer-request.type.js";
 import { DeleteOfferRequest } from "./types/delete-offer-request.type.js";
+import { CreateOfferDto } from "./dto/create-offer.dto.js";
+import { UpdateOfferDto } from "./dto/update-offer.dto.js";
 
 @injectable()
 export class OfferController extends BaseController {
@@ -27,12 +36,52 @@ export class OfferController extends BaseController {
     super(logger);
     this.logger.info("Register routes for OfferController…");
 
-    this.addRoute({ path: "/", method: HttpMethod.Post, handler: this.create });
     this.addRoute({ path: "/", method: HttpMethod.Get, handler: this.findAll });
-    this.addRoute({ path: "/premium/:city", method: HttpMethod.Get, handler: this.findPremiumOffersByCity });
-    this.addRoute({ path: "/:offerId", method: HttpMethod.Get, handler: this.findById });
-    this.addRoute({ path: "/:offerId", method: HttpMethod.Patch, handler: this.updateById });
-    this.addRoute({ path: "/:offerId", method: HttpMethod.Delete, handler: this.deleteById });
+    this.addRoute({
+      path: "/",
+      method: HttpMethod.Post,
+      handler: this.create,
+      middlewares: [
+        new ValidateDtoMiddleware(CreateOfferDto),
+      ],
+    });
+    this.addRoute({
+      path: "/premium/:city",
+      method: HttpMethod.Get,
+      handler: this.findPremiumOffersByCity,
+      middlewares: [
+        new ValidateCityMiddleware(),
+      ],
+    });
+    this.addRoute({
+      path: "/:offerId",
+      method: HttpMethod.Get,
+      handler: this.findById,
+      middlewares: [
+        new ValidateObjectIdMiddleware("offerId"),
+        new DocumentExistsMiddleware(this.offerService, "Offer", "offerId"),
+      ],
+    });
+    this.addRoute({
+      path: "/:offerId",
+      method:
+      HttpMethod.Patch,
+      handler: this.updateById,
+      middlewares: [
+        new ValidateObjectIdMiddleware("offerId"),
+        new ValidateDtoMiddleware(UpdateOfferDto),
+        new DocumentExistsMiddleware(this.offerService, "Offer", "offerId"),
+      ],
+    });
+    this.addRoute({
+      path: "/:offerId",
+      method: HttpMethod.Delete,
+      handler: this.deleteById,
+      middlewares: [
+        new ValidateObjectIdMiddleware("offerId"),
+        new DocumentExistsMiddleware(this.offerService, "Offer", "offerId"),
+      ],
+    });
   }
 
   public async create(
@@ -66,15 +115,7 @@ export class OfferController extends BaseController {
     { params: { city } }: FindPremiumByCityRequest,
     res: Response,
   ) {
-    if (!city || !isCity(city)){
-      throw new HttpError(
-        StatusCodes.BAD_REQUEST,
-        "Correct city is required",
-        "OfferController",
-      );
-    }
-
-    const result = await this.offerService.findPremiumOffersByCity(city);
+    const result = await this.offerService.findPremiumOffersByCity(city as City);
 
     this.ok(res, result.map((offer) => fillDTO(OfferRdo, offer)));
   }
@@ -85,14 +126,6 @@ export class OfferController extends BaseController {
   ) {
     const offer = await this.offerService.findById(offerId);
 
-    if (!offer) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id ${offerId} does not exist`,
-        "OfferController",
-      );
-    }
-
     this.ok(res, fillDTO(DetailedOfferRdo, offer));
   }
 
@@ -102,14 +135,6 @@ export class OfferController extends BaseController {
   ) {
     const offer = await this.offerService.updateById(offerId, body);
 
-    if (!offer) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id ${offerId} does not exist`,
-        "OfferController",
-      );
-    }
-
     this.ok(res, fillDTO(DetailedOfferRdo, offer));
   }
 
@@ -118,14 +143,6 @@ export class OfferController extends BaseController {
     res: Response,
   ) {
     const deletedId = await this.offerService.deleteById(offerId);
-
-    if (!deletedId) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id ${offerId} does not exist`,
-        "OfferController",
-      );
-    }
 
     this.ok(res, deletedId);
   }

@@ -100,7 +100,7 @@ export class ImportCommand implements Command {
 
     await Promise.all(comments.map(async (comment) => {
       await this.commentService.create(comment);
-      const newRating = await this.commentService.getAverageRating(createdOffer.id);
+      const newRating = await this.commentService.getUpdatedAverageRating(createdOffer.id);
       await this.offerService.updateByIdOnNewComment(createdOffer.id, newRating);
     }));
   };
