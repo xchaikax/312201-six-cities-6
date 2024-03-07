@@ -1,7 +1,13 @@
 import { inject, injectable } from "inversify";
-import { Response } from "express";
+import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { BaseController, HttpError, HttpMethod, ValidateDtoMiddleware } from "../../libs/rest/index.js";
+import {
+  BaseController,
+  HttpError,
+  HttpMethod,
+  ValidateDtoMiddleware,
+  ValidateObjectIdMiddleware,
+} from "../../libs/rest/index.js";
 import { Logger } from "../../libs/logger/index.js";
 import { Component } from "../../types/index.js";
 import { CreateUserRequest } from "./types/create-user-request.type.js";
@@ -12,6 +18,7 @@ import { UserRdo } from "./rdo/user.rdo.js";
 import { LoginUserRequest } from "./types/login-user-request.type.js";
 import { CreateUserDto } from "./dto/create-user.dto.js";
 import { LoginUserDto } from "./dto/login-user.dto.js";
+import { UploadFileMiddleware } from "../../libs/rest/middleware/upload-file.middleware.js";
 
 @injectable()
 export class UserController extends BaseController {
@@ -41,6 +48,15 @@ export class UserController extends BaseController {
     });
     this.addRoute({ path: "/logout", method: HttpMethod.Post, handler: this.logout });
     this.addRoute({ path: "/status", method: HttpMethod.Get, handler: this.status });
+    this.addRoute({
+      path: "/:userId/avatar",
+      method: HttpMethod.Post,
+      handler: this.uploadAvatar,
+      middlewares: [
+        new ValidateObjectIdMiddleware("userId"),
+        new UploadFileMiddleware(this.configService.get("UPLOAD_DIRECTORY"), "avatar"),
+      ],
+    });
   }
 
   public async create(
@@ -95,5 +111,11 @@ export class UserController extends BaseController {
       "Not implemented",
       "UserController",
     );
+  }
+
+  public async uploadAvatar(req: Request, res: Response) {
+    this.created(res, {
+      filepath: req.file?.path,
+    });
   }
 }
