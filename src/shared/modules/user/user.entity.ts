@@ -28,6 +28,13 @@ export class UserEntity extends defaultClasses.TimeStamps {
   @prop({ required: true })
   private password?: string;
 
+  @prop({
+    required: false,
+    default: [],
+    _id: false,
+  })
+  public favorites!: string[];
+
   constructor(userData: User) {
     super();
 
@@ -43,6 +50,11 @@ export class UserEntity extends defaultClasses.TimeStamps {
 
   public getPassword() {
     return this.password;
+  }
+
+  public verifyPassword(password: string, salt: string) {
+    const hashPassword = createSHA256(password, salt);
+    return hashPassword === this.password;
   }
 }
 

@@ -4,7 +4,7 @@ import { StatusCodes } from "http-status-codes";
 import {
   BaseController,
   HttpError,
-  HttpMethod,
+  HttpMethod, PrivateRouteMiddleware,
   ValidateDtoMiddleware,
   ValidateObjectIdMiddleware,
 } from "../../libs/rest/index.js";
@@ -34,6 +34,7 @@ export class CommentController extends BaseController {
       method: HttpMethod.Post,
       handler: this.create,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware("offerId"),
         new ValidateDtoMiddleware(CreateCommentDto),
         new DocumentExistsMiddleware(this.offerService, "Offer", "offerId"),
@@ -51,12 +52,13 @@ export class CommentController extends BaseController {
   }
 
   public async create(
-    { body, params: { offerId } }: CreateCommentRequest,
+    { body, params: { offerId }, tokenPayload: { id } }: CreateCommentRequest,
     res: Response,
   ) {
     const result = await this.commentService.create({
       ...body,
       offerId,
+      authorId: id,
     });
 
     const newRating = await this.commentService.getUpdatedAverageRating(offerId);

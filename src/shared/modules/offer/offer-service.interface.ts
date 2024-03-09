@@ -12,5 +12,6 @@ export interface OfferService extends DocumentExists {
   deleteById(id: string): Promise<string | null>;
   findAll(amount?: number): Promise<types.DocumentType<OfferEntity>[]>;
   findPremiumOffersByCity(city: City): Promise<types.DocumentType<OfferEntity>[]>;
+  findFavoriteOffersByUserId(userId: string): Promise<types.DocumentType<OfferEntity>[]>;
   updateByIdOnNewComment(id: string, newRating: number): Promise<types.DocumentType<OfferEntity> | null>;
 }

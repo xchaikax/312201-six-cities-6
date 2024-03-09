@@ -1,4 +1,4 @@
-import { IsMongoId, Max, MaxLength, Min, MinLength } from "class-validator";
+import { Max, MaxLength, Min, MinLength } from "class-validator";
 import { CommentDtoConstants } from "./comment.constants.js";
 import { CommentDtoMessages } from "./comment.messages.js";
 
@@ -10,7 +10,4 @@ export class CreateCommentDto {
   @Min(CommentDtoConstants.MIN_RATING, { message: CommentDtoMessages.rating.min })
   @Max(CommentDtoConstants.MAX_RATING, { message: CommentDtoMessages.rating.max })
   public rating: number;
-
-  @IsMongoId({ message: CommentDtoMessages.authorId.invalidFormat })
-  public authorId: string;
 }
