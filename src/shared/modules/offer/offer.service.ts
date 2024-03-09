@@ -7,12 +7,14 @@ import { CreateOfferDto } from "./dto/create-offer.dto.js";
 import { OfferEntity } from "./offer.entity.js";
 import { UpdateOfferDto } from "./dto/update-offer.dto.js";
 import { PREMIUM_OFFERS_AMOUNT_LIMIT } from "./offer.constants.js";
+import { UserEntity } from "../user/index.js";
 
 @injectable()
 export class BaseOfferService implements OfferService {
   constructor(
     @inject(Component.Logger) private readonly logger: Logger,
     @inject(Component.OfferModel) private readonly offerModel: types.ModelType<OfferEntity>,
+    @inject(Component.UserModel) private readonly userModel: types.ModelType<UserEntity>,
   ) {}
 
   public async create(dto: CreateOfferDto): Promise<types.DocumentType<OfferEntity>> {
@@ -66,6 +68,16 @@ export class BaseOfferService implements OfferService {
         { $sort: { createdAt: Sorting.Descending } },
         { $limit: PREMIUM_OFFERS_AMOUNT_LIMIT },
       ]).exec();
+  }
+
+  public async findFavoriteOffersByUserId(userId: string): Promise<types.DocumentType<OfferEntity>[]> {
+    const user = await this.userModel.findById(userId).exec();
+
+    if (!user) {
+      throw new Error(`User with id ${userId} not found`);
+    }
+
+    return await this.offerModel.find({ _id: { $in: user.favorites } }).exec() || [];
   }
 
   public async updateByIdOnNewComment(id: string, newRating: number): Promise<types.DocumentType<OfferEntity> | null> {

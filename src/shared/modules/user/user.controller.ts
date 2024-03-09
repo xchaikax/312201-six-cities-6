@@ -9,23 +9,26 @@ import {
   ValidateObjectIdMiddleware,
 } from "../../libs/rest/index.js";
 import { Logger } from "../../libs/logger/index.js";
+import { UploadFileMiddleware } from "../../libs/rest/index.js";
+import { Config, RestSchema } from "../../libs/config/index.js";
 import { Component } from "../../types/index.js";
+import { fillDTO } from "../../helpers/index.js";
+import { AuthService } from "../auth/index.js";
 import { CreateUserRequest } from "./types/create-user-request.type.js";
 import { UserService } from "./user-service.interface.js";
-import { Config, RestSchema } from "../../libs/config/index.js";
-import { fillDTO } from "../../helpers/index.js";
 import { UserRdo } from "./rdo/user.rdo.js";
 import { LoginUserRequest } from "./types/login-user-request.type.js";
 import { CreateUserDto } from "./dto/create-user.dto.js";
 import { LoginUserDto } from "./dto/login-user.dto.js";
-import { UploadFileMiddleware } from "../../libs/rest/middleware/upload-file.middleware.js";
+import { LoggedInUserRdo } from "./dto/logged-in-user.rdo.js";
 
 @injectable()
 export class UserController extends BaseController {
   constructor(
     @inject(Component.Logger) protected readonly logger: Logger,
-    @inject(Component.UserService) private readonly userService: UserService,
     @inject(Component.Config) private readonly configService: Config<RestSchema>,
+    @inject(Component.UserService) private readonly userService: UserService,
+    @inject(Component.AuthService) private readonly authService: AuthService,
   ) {
     super(logger);
     this.logger.info("Register routes for UserController…");
@@ -79,6 +82,7 @@ export class UserController extends BaseController {
 
   public async login(
     { body }: LoginUserRequest,
+    res: Response,
   ) {
     const existingUser = await this.userService.findByEmail(body.email);
 
@@ -90,30 +94,53 @@ export class UserController extends BaseController {
       );
     }
 
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      "Not implemented",
-      "UserController",
-    );
+    const user = await this.authService.verify(body);
+    const token = await this.authService.authenticate(user);
+
+    this.ok(res, fillDTO(LoggedInUserRdo, { email: user.email, token }));
   }
 
-  public async logout() {
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      "Not implemented",
-      "UserController",
-    );
+  public async logout({ tokenPayload }: Request, res: Response) {
+    const foundUser = await this.userService.findByEmail(tokenPayload.email);
+
+    if (!foundUser) {
+      throw new HttpError(
+        StatusCodes.UNAUTHORIZED,
+        "Unauthorized",
+        "UserController",
+      );
+    }
+
+    this.noContent(res, foundUser);
   }
 
-  public async status() {
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      "Not implemented",
-      "UserController",
-    );
+  public async status({ tokenPayload }: Request, res: Response) {
+    const foundUser = await this.userService.findByEmail(tokenPayload.email);
+
+    if (!foundUser) {
+      throw new HttpError(
+        StatusCodes.UNAUTHORIZED,
+        "Unauthorized",
+        "UserController",
+      );
+    }
+
+    this.ok(res, fillDTO(LoggedInUserRdo, foundUser));
   }
 
   public async uploadAvatar(req: Request, res: Response) {
+    const { id, email } = req.tokenPayload;
+
+    if(!req.file?.path) {
+      throw new HttpError(
+        StatusCodes.BAD_REQUEST,
+        `File error while uploading avatar for user ${email}`,
+        "UserController",
+      );
+    }
+
+    await this.userService.updateById(id, { avatar: req.file.filename });
+
     this.created(res, {
       filepath: req.file?.path,
     });

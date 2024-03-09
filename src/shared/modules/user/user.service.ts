@@ -4,6 +4,7 @@ import { Component } from "../../types/index.js";
 import { Logger } from "../../libs/logger/index.js";
 import { UserService } from "./user-service.interface.js";
 import { CreateUserDto } from "./dto/create-user.dto.js";
+import { UpdateUserDto } from "./dto/update-user.dto.js";
 import { UserEntity } from "./user.entity.js";
 
 @injectable()
@@ -40,6 +41,32 @@ export class BaseUserService implements UserService {
     }
 
     return this.create(dto, salt);
+  }
+
+  public async updateById(id: string, dto: UpdateUserDto): Promise<types.DocumentType<UserEntity> | null> {
+    return await this.userModel
+      .findByIdAndUpdate(id, dto, { new: true })
+      .exec();
+  }
+
+  public async getFavorites(userId: string): Promise<string[]> {
+    const user = await this.userModel
+      .findById(userId)
+      .exec();
+
+    return user?.favorites || [];
+  }
+
+  public async addOfferToFavorites(userId: string, rentId: string): Promise<unknown> {
+    return this.userModel
+      .findByIdAndUpdate(userId, { $push: { favorites: rentId } })
+      .exec();
+  }
+
+  public async deleteOfferFromFavorites(userId: string, offerId: string): Promise<unknown> {
+    return this.userModel
+      .findByIdAndUpdate(userId, { $pull: { favorites: offerId } })
+      .exec();
   }
 
   public async exists(id: string): Promise<boolean> {
