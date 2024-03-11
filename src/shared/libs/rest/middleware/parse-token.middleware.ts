@@ -2,9 +2,9 @@ import { NextFunction, Request, Response } from "express";
 import { jwtVerify } from "jose";
 import { StatusCodes } from "http-status-codes";
 import { createSecretKey } from "node:crypto";
-import { TokenPayload } from "../../../modules/auth/index.js";
 import { HttpError } from "../errors/http-error.js";
 import { Middleware } from "./middleware.interface.js";
+import { TokenPayload } from "../../../../rest/modules/auth/index.js";
 
 export class ParseTokenMiddleware implements Middleware {
   constructor(private readonly jwtSecret: string) {}

@@ -10,9 +10,9 @@ import {
 } from "../../shared/helpers/index.js";
 import { ConsoleLogger } from "../../shared/libs/logger/console.logger.js";
 import { RestConfig } from "../../shared/libs/config/index.js";
-import { BaseUserService, UserModel, UserService } from "../../shared/modules/user/index.js";
-import { BaseOfferService, OfferModel, OfferService } from "../../shared/modules/offer/index.js";
-import { BaseCommentService, CommentModel } from "../../shared/modules/comment/index.js";
+import { BaseUserService, UserModel, UserService } from "../../rest/modules/user/index.js";
+import { BaseOfferService, OfferModel, OfferService } from "../../rest/modules/offer/index.js";
+import { BaseCommentService, CommentModel } from "../../rest/modules/comment/index.js";
 import { DatabaseClient, MongoDatabaseClient } from "../../shared/libs/database-client/index.js";
 import { Logger } from "../../shared/libs/logger/index.js";
 import { Offer } from "../../shared/types/index.js";
